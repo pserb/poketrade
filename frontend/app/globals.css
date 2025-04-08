@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 13%; /* #202020 */
+    --foreground: 34 29% 72%; /* #d4be98 */
+    --card: 22 7% 19%; /* #32302f */
+    --card-foreground: 34 29% 72%; /* #d4be98 */
+    --popover: 22 7% 19%; /* #32302f */
+    --popover-foreground: 34 29% 72%; /* #d4be98 */
+    --primary: 35 54% 59%; /* #d8a657 */
+    --primary-foreground: 0 0% 13%; /* #202020 */
+    --secondary: 24 9% 22%; /* #3d3835 */
+    --secondary-foreground: 34 29% 72%; /* #d4be98 */
+    --muted: 26 13% 45%; /* #7c6f64 */
+    --muted-foreground: 33 10% 52%; /* #928374 */
+    --accent: 174 24% 58%; /* #7daea3 */
+    --accent-foreground: 34 29% 72%; /* #d4be98 */
+    --destructive: 6 70% 65%; /* #ea6962 */
+    --destructive-foreground: 34 29% 72%; /* #d4be98 */
+    --border: 24 8% 33%; /* #5a524c */
+    --input: 24 8% 33%; /* #5a524c */
+    --ring: 35 54% 59%; /* #d8a657 */
+    --chart-1: 35 54% 59%; /* #d8a657 */
+    --chart-2: 174 24% 58%; /* #7daea3 */
+    --chart-3: 88 29% 55%; /* #a9b665 */
+    --chart-4: 6 70% 65%; /* #ea6962 */
+    --chart-5: 326 29% 67%; /* #d3869b */
+    --radius: 0.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    min-height: 100vh;
+    background-color: #202020;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-medium tracking-tight;
+    color: #d8a657;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-card/80 backdrop-blur-md border border-border;
+  }
+
+  .card-highlight {
+    @apply border-primary/30 shadow-md hover:shadow-lg transition-all duration-200;
+  }
+
+  .skeleton {
+    @apply bg-card/30 animate-pulse rounded relative overflow-hidden;
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.05) 20%,
+      rgba(255, 255, 255, 0.1) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+  }
+}
+
+@layer utilities {
+  .auth-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  .fade-out {
+    animation: fadeOut 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
