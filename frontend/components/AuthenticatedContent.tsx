@@ -13,7 +13,7 @@ import { LogOut, User, Database } from "lucide-react";
 export default function AuthenticatedContent() {
   const [data, setData] = useState<TestModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { logout, user } = useAuth();
+  const { logout, user, isTokenExpired } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
   // Add a slight delay before showing content to ensure smooth transition from skeleton
@@ -29,15 +29,21 @@ export default function AuthenticatedContent() {
     fetchData();
   }, []);
 
+  const handleAuthError = (error: unknown) => {
+    if (isTokenExpired(error)) {
+      logout("Your session has expired. Please log in again.");
+    } else {
+      console.error("API request failed:", error);
+    }
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const response = await api.get("http://localhost:8000/testmodel/");
       setData(response.data);
     } catch (error) {
-      console.error("Failed to fetch data:", error);
-      // go back to the login screen instead, by logging out the user
-	  logout();
+      handleAuthError(error);
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +54,7 @@ export default function AuthenticatedContent() {
       await api.delete(`/testmodel/${id}/`);
       fetchData();
     } catch (error) {
-      console.error("Failed to delete model:", error);
+      handleAuthError(error);
     }
   };
 
@@ -60,7 +66,7 @@ export default function AuthenticatedContent() {
       });
       fetchData();
     } catch (error) {
-      console.error("Failed to add model:", error);
+      handleAuthError(error);
     }
   };
 
@@ -82,7 +88,7 @@ export default function AuthenticatedContent() {
 
         <div className="flex space-x-2">
           <Button
-            onClick={logout}
+            onClick={() => logout()}
             variant="outline"
             size="sm"
             className="flex items-center gap-2 border-muted text-muted-foreground hover:text-foreground"
