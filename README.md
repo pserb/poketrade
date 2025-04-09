@@ -18,6 +18,10 @@
 - `localhost:8000` for the backend
 - `localhost:3000` for the frontend
 
+### root user:
+- username: `admin`
+- password: `admin`
+
 ## Architecture Overview
 
 The application follows a standard client-server architecture with a complete separation of concerns:
