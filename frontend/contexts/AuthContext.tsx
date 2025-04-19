@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (username: string, email: string, password: string): Promise<void> => {
     try {
-      const response = await api.post("http://localhost:8000/token/", {
+      const response = await api.post("http://localhost:8000/api/token/", {
         username,
         password,
       });
@@ -130,7 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     password: string
   ): Promise<void> => {
     try {
-      await api.post("http://localhost:8000/user/create/", {
+      await api.post("http://localhost:8000/api/user/create/", {
         username,
         email,
         password,
@@ -186,7 +186,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const destroyAccount = async (): Promise<void> => {
     try {
-      await api.delete("http://localhost:8000/user/destroy/");
+      await api.delete("http://localhost:8000/api/user/destroy/");
 
       addToast({
         title: "Account Deleted",

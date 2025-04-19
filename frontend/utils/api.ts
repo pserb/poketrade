@@ -29,7 +29,7 @@ api.interceptors.response.use(
 				const refreshToken = Cookies.get("refresh_token");
 
 				if (refreshToken) {
-					const response = await axios.post("http://localhost:8000/token/refresh/", {
+					const response = await axios.post("http://localhost:8000/api/token/refresh/", {
 						refresh: refreshToken
 					});
 
