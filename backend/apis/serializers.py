@@ -3,15 +3,17 @@ from rest_framework import serializers
 from .models import Card, TestModel
 from django.contrib.auth.models import User
 
+from .models import CustomUser
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["id", "username", "password"]
+        model = CustomUser
+        fields = ["id", "username", "password", "email", "account_balance"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        user = CustomUser.objects.create_user(**validated_data)
         return user
 
 

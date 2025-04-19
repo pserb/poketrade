@@ -9,13 +9,14 @@ import { useToast } from "./ToastContext";
 
 interface User {
   username: string;
+  email?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string) => Promise<void>;
+  login: (username: string, email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
   logout: (message?: string) => void;
   destroyAccount: () => Promise<void>;
   isTokenExpired: (error: unknown) => boolean;
@@ -25,6 +26,7 @@ interface AuthContextType {
 interface ApiErrorResponse {
   detail?: string;
   username?: string[];
+  email?: string[];
   password?: string[];
   [key: string]: unknown;
 }
@@ -43,10 +45,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsLoading(true);
       const accessToken = Cookies.get("access_token");
       const username = Cookies.get("username");
+      const email = Cookies.get("email");
 
       if (accessToken && username) {
         // You might want to validate the token here
-        setUser({ username });
+        setUser({ username, email });
       }
 
       setIsLoading(false);
@@ -73,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return false;
   };
 
-  const login = async (username: string, password: string): Promise<void> => {
+  const login = async (username: string, email: string, password: string): Promise<void> => {
     try {
       const response = await api.post("http://localhost:8000/token/", {
         username,
@@ -81,8 +84,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       Cookies.set("access_token", response.data.access);
       Cookies.set("username", username);
+      Cookies.set("email", email);
       Cookies.set("refresh_token", response.data.refresh);
-      setUser({ username });
+      setUser({ username, email });
 
       addToast({
         title: "Login Successful",
@@ -105,6 +109,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             throw new Error(errorData.username[0]);
           }
 
+          if (errorData.email?.[0]) {
+            throw new Error(errorData.email[0]);
+          }
+
           if (errorData.password?.[0]) {
             throw new Error(errorData.password[0]);
           }
@@ -118,14 +126,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const register = async (
     username: string,
+    email: string,
     password: string
   ): Promise<void> => {
     try {
       await api.post("http://localhost:8000/user/create/", {
         username,
+        email,
         password,
       });
-      await login(username, password);
+      await login(username, email, password);
 
       addToast({
         title: "Registration Successful",
@@ -143,6 +153,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             throw new Error(errorData.username[0]);
           }
 
+          if (errorData.email?.[0]) {
+            throw new Error(errorData.email[0]);
+          }
+
           if (errorData.password?.[0]) {
             throw new Error(errorData.password[0]);
           }
@@ -158,6 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
     Cookies.remove("username");
+    Cookies.remove("email");
     setUser(null);
 
     if (message) {

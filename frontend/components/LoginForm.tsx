@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { UserIcon, KeyIcon } from "lucide-react";
+import { UserIcon, KeyIcon, AtSign } from "lucide-react";
 
 export default function LoginForm() {
 	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -19,7 +20,7 @@ export default function LoginForm() {
 		setIsLoading(true);
 		setError("");
 		try {
-			await login(username, password);
+			await login(username, email, password);
 		} catch (err) {
 			setError(err as string);
 		} finally {
@@ -45,6 +46,21 @@ export default function LoginForm() {
 								placeholder="Enter your username"
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
+								className="pl-10 bg-background border-border text-foreground"
+								required
+							/>
+						</div>
+					</div>
+					<div className="space-y-2">
+						<Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
+						<div className="relative">
+							<AtSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+							<Input
+								id="email"
+								type="email"
+								placeholder="Enter your email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 								className="pl-10 bg-background border-border text-foreground"
 								required
 							/>
